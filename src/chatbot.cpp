@@ -51,11 +51,13 @@ ChatBot::ChatBot(ChatBot &chatbot)
     _image = new wxBitmap();
     *_image = *chatbot._image;
 
-    _currentNode = new GraphNode(chatbot._currentNode->GetID());
-    *_currentNode = *chatbot._currentNode;
+    // current node can't be copied since it has exclusive ownership to parent edge (unique_ptr)
+    _currentNode = chatbot._currentNode;
+    chatbot._currentNode = nullptr;
 
-    _rootNode = new GraphNode(chatbot._rootNode->GetID());
-    *_rootNode = *chatbot._rootNode;
+    // child node can't be copied since it has exclusive ownership to parent edge (unique_ptr)
+    _rootNode = chatbot._rootNode;
+    chatbot._rootNode = nullptr;
 
     // ChatLogic can't be copied because of nodes being uqniue_ptrs
     _chatLogic = chatbot._chatLogic;
@@ -73,11 +75,13 @@ ChatBot &ChatBot::operator=(ChatBot &rhs)
     _image = new wxBitmap();
     *_image = *rhs._image;
 
-    _currentNode = new GraphNode(rhs._currentNode->GetID());
-    *_currentNode = *rhs._currentNode;
+    // current node can't be copied since it has exclusive ownership to parent edge (unique_ptr)
+    _currentNode = rhs._currentNode;
+    rhs._currentNode = nullptr;
 
-    _rootNode = new GraphNode(rhs._rootNode->GetID());
-    *_rootNode = *rhs._rootNode;
+    // root node can't be copied since it has exclusive ownership to parent edge (unique_ptr)
+    _rootNode = rhs._rootNode;
+    rhs._rootNode = nullptr;
 
     // ChatLogic can't be copied because of nodes being uqniue_ptrs
     _chatLogic = rhs._chatLogic;
