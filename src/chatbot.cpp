@@ -57,8 +57,9 @@ ChatBot::ChatBot(ChatBot &chatbot)
     _rootNode = new GraphNode(chatbot._rootNode->GetID());
     *_rootNode = *chatbot._rootNode;
 
-    _chatLogic = new ChatLogic();
-    *_chatLogic = *chatbot._chatLogic;
+    // ChatLogic can't be copied because of nodes being uqniue_ptrs
+    _chatLogic = chatbot._chatLogic;
+    chatbot._chatLogic = nullptr;
 }
 
 ChatBot &ChatBot::operator=(ChatBot &rhs)
@@ -78,8 +79,9 @@ ChatBot &ChatBot::operator=(ChatBot &rhs)
     _rootNode = new GraphNode(rhs._rootNode->GetID());
     *_rootNode = *rhs._rootNode;
 
-    _chatLogic = new ChatLogic();
-    *_chatLogic = *rhs._chatLogic;
+    // ChatLogic can't be copied because of nodes being uqniue_ptrs
+    _chatLogic = rhs._chatLogic;
+    rhs._chatLogic = nullptr;
 
     return *this;
 }
