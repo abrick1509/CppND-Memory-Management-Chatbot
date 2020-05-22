@@ -21,7 +21,7 @@ ChatBot::ChatBot()
 ChatBot::ChatBot(std::string filename)
 {
     std::cout << "ChatBot Constructor" << std::endl;
-    
+
     // invalidate data handles
     _chatLogic = nullptr;
     _rootNode = nullptr;
@@ -35,7 +35,7 @@ ChatBot::~ChatBot()
     std::cout << "ChatBot Destructor" << std::endl;
 
     // deallocate heap memory
-    if(_image != NULL) // Attention: wxWidgets used NULL and not nullptr
+    if (_image != NULL) // Attention: wxWidgets used NULL and not nullptr
     {
         delete _image;
         _image = NULL;
@@ -44,6 +44,85 @@ ChatBot::~ChatBot()
 
 //// STUDENT CODE
 ////
+
+ChatBot::ChatBot(ChatBot &chatbot)
+{
+    std::cout << "ChatBot Copy Constructor" << std::endl;
+    _image = new wxBitmap();
+    *_image = *chatbot._image;
+
+    _currentNode = new GraphNode(chatbot._currentNode->GetID());
+    *_currentNode = *chatbot._currentNode;
+
+    _rootNode = new GraphNode(chatbot._rootNode->GetID());
+    *_rootNode = *chatbot._rootNode;
+
+    _chatLogic = new ChatLogic();
+    *_chatLogic = *chatbot._chatLogic;
+}
+
+ChatBot &ChatBot::operator=(ChatBot &rhs)
+{
+    std::cout << "ChatBot Copy Assignment Operator" << std::endl;
+    if (&rhs == this)
+    {
+        return *this;
+    }
+
+    _image = new wxBitmap();
+    *_image = *rhs._image;
+
+    _currentNode = new GraphNode(rhs._currentNode->GetID());
+    *_currentNode = *rhs._currentNode;
+
+    _rootNode = new GraphNode(rhs._rootNode->GetID());
+    *_rootNode = *rhs._rootNode;
+
+    _chatLogic = new ChatLogic();
+    *_chatLogic = *rhs._chatLogic;
+
+    return *this;
+}
+
+ChatBot::ChatBot(ChatBot &&chatbot)
+{
+    std::cout << "ChatBot Move Constructor" << std::endl;
+
+    _image = chatbot._image;
+    chatbot._image = nullptr;
+
+    _currentNode = chatbot._currentNode;
+    chatbot._currentNode = nullptr;
+
+    _rootNode = chatbot._rootNode;
+    chatbot._rootNode = nullptr;
+
+    _chatLogic = chatbot._chatLogic;
+    chatbot._chatLogic = nullptr;
+}
+
+ChatBot &ChatBot::operator=(ChatBot &&rhs)
+{
+    std::cout << "ChatBot Move Assignmen Operator" << std::endl;
+    // self assignment, this doens't make sense for move assignments, right?
+    if (&rhs == this)
+    {
+        return *this;
+    }
+
+    _image = rhs._image;
+    rhs._image = nullptr;
+
+    _currentNode = rhs._currentNode;
+    rhs._currentNode = nullptr;
+
+    _rootNode = rhs._rootNode;
+    rhs._rootNode = nullptr;
+
+    _chatLogic = rhs._chatLogic;
+    rhs._chatLogic = nullptr;
+    return *this;
+}
 
 ////
 //// EOF STUDENT CODE
